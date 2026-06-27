@@ -1,0 +1,110 @@
+==============================================
+   FILE SYSTEM AND LINK ANALYSIS REPORT
+==============================================
+Subject: Command Line Interface
+Question 3 - File System and Link Analysis
+Student: Bipin Thapa
+
+----------------------------------------------
+1. FILES CREATED
+----------------------------------------------
+Commands used:
+echo "This is the original file for link analysis." > original.txt
+ln original.txt hardlink.txt
+ln -s original.txt symlink.txt
+
+Observation: Three files were created - one original, one hard link,
+and one symbolic link. The ln command creates hard links by default
+and ln -s creates symbolic links.
+
+----------------------------------------------
+2. INODE NUMBERS
+----------------------------------------------
+Command: ls -li original.txt hardlink.txt symlink.txt
+
+Results:
+- original.txt  : Inode 131380
+- hardlink.txt  : Inode 131380 (SAME as original)
+- symlink.txt   : Inode 131397 (DIFFERENT)
+
+Observation: Hard link shares the exact same inode as the original
+file meaning they point to the same data on disk. The symbolic link
+has its own inode as it is just a pointer to the original file path.
+
+----------------------------------------------
+3. COMPARISON: HARD LINK vs SYMBOLIC LINK
+----------------------------------------------
+Hard Link:
+- Same inode number as original
+- Direct reference to file data on disk
+- Works even if original file is deleted
+- Cannot link across different filesystems
+- Shows as regular file in ls output
+
+Symbolic Link:
+- Different inode number
+- Just a pointer/shortcut to the original path
+- Breaks if original file is deleted
+- Can link across different filesystems
+- Shows as symlink with -> in ls output
+
+----------------------------------------------
+4. EFFECT OF DELETING THE ORIGINAL FILE
+----------------------------------------------
+Command: rm original.txt
+Then: cat hardlink.txt / cat symlink.txt
+
+Results:
+- hardlink.txt : Still worked perfectly, showed full content
+- symlink.txt  : Showed "No such file or directory" error
+
+Observation: Deleting original.txt broke the symbolic link because
+it was only pointing to the filename. The hard link still worked
+because it references the actual data on disk via the inode, which
+only gets deleted when all hard links to it are removed.
+
+----------------------------------------------
+5. METADATA COLLECTED USING STAT
+----------------------------------------------
+Command: stat original.txt hardlink.txt symlink.txt
+
+original.txt (recreated):
+- Inode: 131399, Size: 45 bytes, Links: 1
+- Permissions: 0664/-rw-rw-r--
+
+hardlink.txt:
+- Inode: 131380, Size: 45 bytes, Links: 1
+- Permissions: 0664/-rw-rw-r--
+
+symlink.txt:
+- Inode: 131397, Size: 12 bytes, Links: 1
+- Permissions: 0777/lrwxrwxrwx
+- Type: symbolic link -> original.txt
+
+Observation: The stat command reveals detailed metadata including
+inode, size, permissions, and timestamps. The symlink size is 12
+bytes which is the length of the text "original.txt" it stores.
+
+----------------------------------------------
+6. CONCLUSIONS
+----------------------------------------------
+- Hard links are safer for critical data as they survive
+  deletion of the original file.
+- Symbolic links are more flexible but fragile - they break
+  when the target is moved or deleted.
+- Inodes are the true identity of a file in Linux filesystem.
+- A file is only truly deleted when all hard links to its
+  inode are removed.
+- Symbolic links have permissions 0777 but actual access is
+  controlled by the target file permissions.
+
+----------------------------------------------
+SUMMARY
+----------------------------------------------
+This experiment demonstrated the fundamental difference between
+hard links and symbolic links in Linux. Hard links share inodes
+and provide resilient references to file data, while symbolic
+links are simple path pointers that break when the original is
+removed. Understanding links is essential for managing files,
+backups, and system configurations in Linux.
+==============================================
