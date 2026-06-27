@@ -1,0 +1,114 @@
+==============================================
+   FILE ACCESS AND I/O INVESTIGATION REPORT
+==============================================
+Subject: Command Line Interface
+Question 4 - File Access and I/O Investigation
+Student: Bipin Thapa
+
+----------------------------------------------
+1. OPEN FILES IDENTIFIED
+----------------------------------------------
+Command: lsof | head -20
+Observation: The lsof command listed all open files on the system.
+Processes like bash, rsyslogd were visible. Some entries showed
+"Permission denied" as Cloud Shell restricts access to other
+users' process information for security reasons.
+
+----------------------------------------------
+2. OPEN FILES FOR CURRENT USER
+----------------------------------------------
+Command: lsof -u bipin90thapa | head -20
+Observation: Filtered open files for the current user showed
+processes including sh, node, and sshd. Each process had multiple
+file descriptors open including the bash executable, shared
+libraries like libc.so.6, and pipe connections.
+
+----------------------------------------------
+3. FILE DESCRIPTOR OBSERVATIONS
+----------------------------------------------
+Command: ls -la /proc/$$/fd
+Output:
+0 -> /dev/pts/2  (stdin  - standard input)
+1 -> /dev/pts/2  (stdout - standard output)
+2 -> /dev/pts/2  (stderr - standard error)
+255 -> /dev/pts/2 (bash internal)
+
+Observation: Every running process has 3 standard file descriptors.
+FD 0 is stdin (keyboard input), FD 1 is stdout (screen output),
+and FD 2 is stderr (error output). All point to /dev/pts/2 which
+is the current terminal session.
+
+----------------------------------------------
+4. OUTPUT REDIRECTION
+----------------------------------------------
+Command: echo "Testing output redirection" > output.txt
+Result: Text was written to output.txt instead of the screen.
+
+Command: cat output.txt
+Output: Testing output redirection
+
+Observation: The > operator redirects stdout from the screen to
+a file. If the file exists it gets overwritten. This is useful
+for saving command output to files for later analysis.
+
+----------------------------------------------
+5. ERROR REDIRECTION
+----------------------------------------------
+Command: ls /nonexistent 2> error.txt
+Result: Error message was captured in error.txt instead of screen.
+
+Command: cat error.txt
+Output: ls: cannot access '/nonexistent': No such file or directory
+
+Observation: The 2> operator redirects stderr (file descriptor 2)
+to a file. This is useful for logging errors separately from normal
+output, especially in scripts and automated tasks.
+
+----------------------------------------------
+6. APPEND REDIRECTION
+----------------------------------------------
+Command: echo "First line" > combined.txt
+         echo "Second line" >> combined.txt
+Result: Both lines appeared in combined.txt
+
+Observation: The >> operator appends to a file without overwriting
+existing content. This is different from > which overwrites the file
+completely. Useful for building log files incrementally.
+
+----------------------------------------------
+7. RESOURCE LIMITS
+----------------------------------------------
+Command: ulimit -a
+Key observations:
+- Open files limit: 1024 (max files a process can open)
+- Stack size: 8192 KB (memory for program execution stack)
+- Pipe size: 8 x 512 bytes = 4096 bytes
+- Core file size: unlimited
+- Virtual memory: unlimited
+
+Observation: Resource limits prevent any single process from
+consuming all system resources. The open files limit of 1024
+means a process can have at most 1024 files open simultaneously.
+
+----------------------------------------------
+8. HOW LINUX MANAGES FILE I/O
+----------------------------------------------
+Linux manages file I/O through file descriptors - integer numbers
+that represent open files. Every process starts with 3 default
+descriptors (stdin=0, stdout=1, stderr=2). When a file is opened,
+Linux assigns the next available descriptor number. The kernel
+maintains a file descriptor table for each process. Redirection
+operators (>, >>, 2>) allow reassigning these descriptors to
+files instead of the terminal. Resource limits (ulimit) ensure
+fair usage of system resources across all processes.
+
+----------------------------------------------
+SUMMARY
+----------------------------------------------
+This investigation demonstrated how Linux manages file access and
+I/O operations through file descriptors, redirection operators,
+and resource limits. The lsof tool revealed open files per process,
+while /proc/$$/fd showed the standard descriptors of the current
+shell. Output and error redirection using > and 2> are fundamental
+tools for controlling where command output goes in Linux.
+==============================================
