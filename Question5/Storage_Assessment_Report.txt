@@ -1,0 +1,92 @@
+==============================================
+   STORAGE HEALTH ASSESSMENT REPORT
+==============================================
+Subject: Command Line Interface
+Question 5 - Storage Health Assessment
+Student: Bipin Thapa
+
+----------------------------------------------
+1. AVAILABLE STORAGE DEVICES
+----------------------------------------------
+Command: lsblk
+Output:
+- sda: 100G disk with 12 partitions
+  - sda1: 95.8G - main partition (mounted at /run/google/devshell)
+  - sda2-sda12: smaller system partitions
+- sdb: 5G disk
+  - sdb1: 5G partition mounted at /home
+
+Observation: Two storage devices are present. sda is the main
+100GB disk and sdb is a 5GB disk dedicated to home directories.
+
+----------------------------------------------
+2. MOUNTED FILE SYSTEMS
+----------------------------------------------
+Command: df -h
+Output:
+- overlay: 95G total, 71G used, 24G free (76% used)
+- /dev/sda1: 95G total, 71G used, 24G free
+- /dev/sdb1: 4.8G total, 122M used, 4.5G free (3% used)
+- tmpfs: 64M (RAM-based temporary storage)
+
+Observation: The main filesystem is 76% full which is moderately
+high. The home partition has plenty of space at only 3% used.
+
+----------------------------------------------
+3. DISK USAGE STATISTICS
+----------------------------------------------
+Command: du -sh ~/*
+Key findings:
+- CLI-Lab-Assignment: 368K
+- secure_project: 20K
+- Individual files: 4K each
+- Total home directory usage is minimal
+
+Observation: The home directory uses very little space. Most disk
+usage is on the system partition which is at 76% capacity.
+
+----------------------------------------------
+4. INODE UTILIZATION
+----------------------------------------------
+Command: df -i
+Output:
+- overlay: 6,258,720 total inodes, 1,347,467 used (22%)
+- /home: 327,680 total inodes, 359 used (1%)
+
+Observation: Inode usage is healthy. The system partition uses
+22% of inodes and home uses only 1%. There is no risk of running
+out of inodes in the near future.
+
+----------------------------------------------
+5. STORAGE HEALTH OBSERVATIONS
+----------------------------------------------
+- Main disk (sda) is at 76% capacity - needs monitoring
+- Home partition (sdb) is healthy at only 3% used
+- Inode utilization is well within safe limits (under 25%)
+- No unmounted or failing drives detected
+- tmpfs (RAM disk) is completely empty and available
+- Multiple small system partitions on sda are normal for
+  Google Cloud Shell architecture
+
+----------------------------------------------
+6. RECOMMENDATIONS
+----------------------------------------------
+- Monitor main filesystem usage - 76% is approaching the
+  recommended 80% warning threshold
+- Clean up unused Docker images to free space on main disk
+- Consider archiving old log files to reduce system partition usage
+- Home directory is well managed with only 3% usage
+- Regular use of du and df commands recommended for monitoring
+- Set up alerts if disk usage exceeds 85%
+
+----------------------------------------------
+SUMMARY
+----------------------------------------------
+The storage assessment revealed a healthy overall system with
+two storage devices totaling 105GB. The main system partition
+is at 76% capacity which requires monitoring. The home partition
+is healthy at 3% usage. Inode utilization is well within safe
+limits at 22% for the system partition. Regular monitoring using
+lsblk, df, and du commands is recommended to maintain storage
+health and prevent disk space issues.
+==============================================
