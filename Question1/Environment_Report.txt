@@ -1,0 +1,66 @@
+==============================================
+   LINUX ENVIRONMENT VERIFICATION REPORT
+==============================================
+Subject: Command Line Interface
+Question 1 - Linux Environment Verification
+Student: Bipin Thapa
+
+----------------------------------------------
+1. USERNAME
+----------------------------------------------
+Command: whoami
+Output: bipin90thapa
+Observation: The currently logged-in user is bipin90thapa. This is the
+username assigned to this Google Cloud Shell session.
+
+----------------------------------------------
+2. GROUPS
+----------------------------------------------
+Command: groups
+Output: bipin90thapa adm sudo docker
+Observation: The user belongs to 4 groups. The sudo group grants
+administrator privileges. The docker group allows running containers.
+The adm group allows reading system logs.
+
+----------------------------------------------
+3. CURRENT SHELL
+----------------------------------------------
+Command: echo $SHELL
+Output: /bin/bash
+Observation: The system is using Bash (Bourne Again Shell) located at
+/bin/bash. Bash is the most widely used shell in Linux environments.
+
+----------------------------------------------
+4. CURRENT WORKING DIRECTORY
+----------------------------------------------
+Command: pwd
+Output: /home/bipin90thapa
+Observation: The current working directory is the home directory of the
+user bipin90thapa. This is the default starting location for every user.
+
+----------------------------------------------
+5. FILES AND DIRECTORIES IN WORKSPACE
+----------------------------------------------
+Command: ls -la
+Observation: The home directory contains 5 project folders (Question1-5),
+configuration files like .bashrc and .profile, and hidden directories
+for tools like .docker, .npm, and .gemini. All question folders are
+owned by bipin90thapa with read/write/execute permissions.
+
+----------------------------------------------
+6. NETWORK CONNECTIVITY
+----------------------------------------------
+Command: ping -c 4 google.com
+Output: 4 packets transmitted, 4 received, 0% packet loss
+        Average response time: 0.588 ms
+Observation: The network is fully operational. All 4 packets were
+successfully sent and received with 0% packet loss. The low response
+time confirms a fast and stable internet connection.
+
+----------------------------------------------
+SUMMARY
+----------------------------------------------
+The Linux environment on Google Cloud Shell is fully configured.
+The user bipin90thapa has sudo and docker privileges, is running
+Bash shell, and has a stable network connection with no packet loss.
+==============================================
