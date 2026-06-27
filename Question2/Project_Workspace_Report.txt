@@ -1,0 +1,97 @@
+==============================================
+   SECURE PROJECT WORKSPACE SETUP REPORT
+==============================================
+Subject: Command Line Interface
+Question 2 - Secure Project Workspace Setup
+Student: Bipin Thapa
+
+----------------------------------------------
+1. DIRECTORY STRUCTURE CREATED
+----------------------------------------------
+Command: mkdir -p secure_project/{src,docs,config,logs}
+Output:
+secure_project/
+├── config/
+├── docs/
+├── logs/
+└── src/
+Observation: A secure project workspace was created with 4 subfolders.
+Each folder serves a specific purpose - src for source code, config for
+configuration files, docs for documentation, and logs for log files.
+
+----------------------------------------------
+2. FILES CREATED IN EACH FOLDER
+----------------------------------------------
+Commands used:
+touch secure_project/src/main.py
+touch secure_project/config/settings.conf
+touch secure_project/docs/readme.txt
+touch secure_project/logs/app.log
+Observation: Sample files were created in each subdirectory to simulate
+a real project environment for permission testing.
+
+----------------------------------------------
+3. FILE PERMISSIONS BEFORE MODIFICATION
+----------------------------------------------
+Command: ls -la secure_project/src/ (and other folders)
+All files showed: -rw-rw-r--
+Meaning: Owner=read/write, Group=read/write, Others=read only
+Observation: Default permissions were too open, especially for sensitive
+files like config. Anyone could read configuration settings.
+
+----------------------------------------------
+4. FILE PERMISSIONS AFTER MODIFICATION
+----------------------------------------------
+Commands used:
+chmod 600 secure_project/config/settings.conf
+chmod 750 secure_project/src/main.py
+chmod 640 secure_project/logs/app.log
+chmod 644 secure_project/docs/readme.txt
+
+Results:
+- settings.conf : -rw------- (only owner can read/write)
+- main.py       : -rwxr-x--- (owner=full, group=read/execute, others=none)
+- app.log       : -rw-r----- (owner=read/write, group=read, others=none)
+- readme.txt    : -rw-r--r-- (owner=read/write, others=read only)
+
+Observation: Each file now has appropriate permissions based on its
+sensitivity level. Config files are most restricted, docs are most open.
+
+----------------------------------------------
+5. OWNERSHIP DETAILS
+----------------------------------------------
+Command: ls -la secure_project/
+Output: All files and folders owned by bipin90thapa:bipin90thapa
+Observation: The user bipin90thapa is both the owner and group owner
+of all files, giving full control over the workspace.
+
+----------------------------------------------
+6. UMASK VALUE
+----------------------------------------------
+Command: umask
+Output: 0002
+Observation: The umask 0002 removes write permission for others by
+default when new files are created. This ensures new files are not
+accidentally made writable by all users on the system.
+
+----------------------------------------------
+7. HOW PERMISSIONS PROTECT PROJECT DATA
+----------------------------------------------
+- Config files (600): Only the owner can read sensitive settings.
+  Prevents unauthorized users from accessing passwords or API keys.
+- Source code (750): Group members can run but not modify the code.
+  Protects code integrity while allowing team collaboration.
+- Log files (640): Group can monitor logs but cannot modify them.
+  Ensures log integrity for auditing purposes.
+- Docs (644): Readable by everyone but only owner can edit.
+  Allows sharing documentation while preventing accidental edits.
+
+----------------------------------------------
+SUMMARY
+----------------------------------------------
+A secure project workspace was successfully created with appropriate
+directory structure and file permissions. The umask value of 0002
+ensures new files are protected by default. Using chmod to set specific
+permissions on each file type ensures that sensitive data like config
+files are protected while maintaining necessary access for collaboration.
+==============================================
